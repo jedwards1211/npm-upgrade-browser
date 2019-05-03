@@ -3,7 +3,10 @@
 coverage
 es
 node_modules
+assets
 .eslintcache
 /*.js
 /*.js.flow
 !/.babelrc.js
+!/webpack.config.js
+!/.dude-wheres-my-module.js

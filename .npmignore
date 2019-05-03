@@ -9,6 +9,7 @@
 /test
 /coverage
 /flow-typed
+/assets
 __tests__
 /.*
 !/.flowconfig
