@@ -14,20 +14,27 @@ import createJss from '../universal/jss/createJss'
 import theme from '../universal/theme'
 import StandardErrorBoundary from '../universal/components/StandardErrorBoundary'
 
+import { type Store } from '../universal/redux/types'
+
+import { Provider } from 'react-redux'
+
 const jss = createJss()
 
 type Props = {
   client: ApolloClient<any>,
+  store: Store,
 }
 
-const Root = ({ client }: Props) => (
+const Root = ({ client, store }: Props) => (
   <StandardErrorBoundary>
     <JssProvider jss={jss}>
       <MuiThemeProvider theme={theme}>
         <ApolloProvider client={client}>
-          <Router>
-            <App />
-          </Router>
+          <Provider store={store}>
+            <Router>
+              <App />
+            </Router>
+          </Provider>
         </ApolloProvider>
       </MuiThemeProvider>
     </JssProvider>

@@ -11,9 +11,10 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { getDataFromTree } from 'react-apollo'
 import { SchemaLink } from 'apollo-link-schema'
 import schema from '../graphql/schema'
-
 import Html from './Html'
 import dataIdFromObject from '../../universal/apollo/dataIdFromObject'
+import { type Store } from '../../universal/redux/types'
+import makeStore from './makeStore'
 
 const rootDir = path.resolve(__dirname, '..', '..')
 
@@ -37,6 +38,8 @@ const serverSideRender = async (req: $Request, res: $Response) => {
       cache: new InMemoryCache({ dataIdFromObject }),
     })
 
+    const store: Store = makeStore()
+
     const routerContext = {}
 
     const app = (
@@ -45,6 +48,7 @@ const serverSideRender = async (req: $Request, res: $Response) => {
         assets={assets}
         apolloClient={apolloClient}
         location={req.url}
+        store={store}
         routerContext={routerContext}
         disableStylesGeneration
       />

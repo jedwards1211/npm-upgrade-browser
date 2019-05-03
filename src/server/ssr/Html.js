@@ -6,7 +6,7 @@
 import * as React from 'react'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
-
+import { Provider } from 'react-redux'
 import { SheetsRegistry, JssProvider } from 'react-jss'
 import type { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
@@ -16,12 +16,14 @@ import autoprefixer from 'autoprefixer'
 import App from '../../universal/components/App'
 import createJss from '../../universal/jss/createJss'
 import theme from '../../universal/theme'
+import { type Store } from '../../universal/redux/types'
 const jss = createJss()
 
 const postcssInstance = postcss([autoprefixer()])
 
 type Props = {
   title: string,
+  store: Store,
   assets?: Object,
   apolloClient: ApolloClient<any>,
   extractApolloState?: boolean,
@@ -41,6 +43,7 @@ const Html = ({
   location,
   routerContext,
   title,
+  store,
   assets,
   apolloClient,
   extractApolloState,
@@ -56,13 +59,18 @@ const Html = ({
         disableStylesGeneration={disableStylesGeneration}
       >
         <ApolloProvider client={apolloClient}>
-          <StaticRouter context={routerContext} location={location}>
-            <App />
-          </StaticRouter>
+          <Provider store={store}>
+            <StaticRouter context={routerContext} location={location}>
+              <App />
+            </StaticRouter>
+          </Provider>
         </ApolloProvider>
       </MuiThemeProvider>
     </JssProvider>
   )
+  const initialState = `window.__INITIAL_STATE__ = ${JSON.stringify(
+    store.getState()
+  )}`
 
   const apolloState = extractApolloState
     ? `window.__APOLLO_STATE__=${JSON.stringify(apolloClient.extract()).replace(
@@ -99,6 +107,7 @@ const Html = ({
         />
       </head>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: initialState }} />
         {apolloState && (
           <script dangerouslySetInnerHTML={{ __html: apolloState }} />
         )}
