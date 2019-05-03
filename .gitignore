@@ -10,3 +10,4 @@ assets
 !/.babelrc.js
 !/webpack.config.js
 !/.dude-wheres-my-module.js
+/schema.graphql
