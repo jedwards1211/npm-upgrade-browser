@@ -1,5 +1,5 @@
-// flow-typed signature: e3d42118a34a627d9c121880be7d1a52
-// flow-typed version: 120d43bb08/chai_v4.x.x/flow_>=v0.25.0
+// flow-typed signature: 3d012055643ffc7325a13636ed48af8a
+// flow-typed version: f04d291d8b/chai_v4.x.x/flow_>=v0.25.0
 
 declare module "chai" {
   declare type ExpectChain<T> = {
@@ -21,6 +21,7 @@ declare module "chai" {
     deep: ExpectChain<T>,
     any: ExpectChain<T>,
     all: ExpectChain<T>,
+    own: ExpectChain<T>,
 
     a: ExpectChain<T> & ((type: string, message?: string) => ExpectChain<T>),
     an: ExpectChain<T> & ((type: string, message?: string) => ExpectChain<T>),
@@ -57,6 +58,8 @@ declare module "chai" {
     lengthOf: (value: number, message?: string) => ExpectChain<T>,
 
     match: (regex: RegExp, message?: string) => ExpectChain<T>,
+    matches: (regex: RegExp, message?: string) => ExpectChain<T>,
+
     string: (string: string, message?: string) => ExpectChain<T>,
 
     key: (key: string) => ExpectChain<T>,
@@ -86,6 +89,7 @@ declare module "chai" {
     decrease: (obj: mixed, key: string, message?: string) => ExpectChain<T>,
 
     by: (delta: number, message?: string) => ExpectChain<T>,
+    ordered: ExpectChain<T>,
 
     // dirty-chai
     ok: () => ExpectChain<T>,
@@ -112,25 +116,35 @@ declare module "chai" {
     calledThrice: () => ExpectChain<T>,
     calledBefore: (spy: mixed) => ExpectChain<T>,
     calledAfter: (spy: mixed) => ExpectChain<T>,
+    calledImmediatelyBefore: (spy: mixed) => ExpectChain<T>,
+    calledImmediatelyAfter: (spy: mixed) => ExpectChain<T>,
     calledWith: (...args: Array<mixed>) => ExpectChain<T>,
+    calledOnceWith: (...args: Array<mixed>) => ExpectChain<T>,
     calledWithMatch: (...args: Array<mixed>) => ExpectChain<T>,
     calledWithExactly: (...args: Array<mixed>) => ExpectChain<T>,
+    calledOnceWithExactly: (...args: Array<mixed>) => ExpectChain<T>,
+    returned: (returnVal: mixed) => ExpectChain<T>,
+    alwaysReturned: (returnVal: mixed) => ExpectChain<T>,
 
     // chai-as-promised
     eventually: ExpectChain<T>,
     resolvedWith: (value: mixed) => Promise<mixed> & ExpectChain<T>,
     resolved: () => Promise<mixed> & ExpectChain<T>,
-    rejectedWith: (value: mixed) => Promise<mixed> & ExpectChain<T>,
+    rejectedWith: (
+      value: mixed,
+      errMsgMatcher?: RegExp | string,
+      msg?: string
+    ) => Promise<mixed> & ExpectChain<T>,
     rejected: () => Promise<mixed> & ExpectChain<T>,
     notify: (callback: () => mixed) => ExpectChain<T>,
     fulfilled: () => Promise<mixed> & ExpectChain<T>,
 
     // chai-subset
-    containSubset: (obj: Object | Object[]) => ExpectChain<T>,
+    containSubset: (obj: {} | Array< {} >) => ExpectChain<T>,
 
     // chai-redux-mock-store
     dispatchedActions: (
-      actions: Array<Object | ((action: Object) => any)>
+      actions: Array<{} | ((action: {}) => any)>
     ) => ExpectChain<T>,
     dispatchedTypes: (actions: Array<string>) => ExpectChain<T>,
 
@@ -162,6 +176,11 @@ declare module "chai" {
 
     static isOk(object: mixed, message?: string): void;
     static isNotOk(object: mixed, message?: string): void;
+
+    static empty(object: mixed, message?: string): void;
+    static isEmpty(object: mixed, message?: string): void;
+    static notEmpty(object: mixed, message?: string): void;
+    static isNotEmpty(object: mixed, message?: string): void;
 
     static equal(actual: mixed, expected: mixed, message?: string): void;
     static notEqual(actual: mixed, expected: mixed, message?: string): void;
@@ -214,8 +233,8 @@ declare module "chai" {
     static typeOf(val: mixed, type: string, msg?: string): void;
     static notTypeOf(val: mixed, type: string, msg?: string): void;
 
-    static instanceOf(val: mixed, constructor: Function, msg?: string): void;
-    static notInstanceOf(val: mixed, constructor: Function, msg?: string): void;
+    static instanceOf(val: mixed, constructor: Class< * >, msg?: string): void;
+    static notInstanceOf(val: mixed, constructor: Class< * >, msg?: string): void;
 
     static include(exp: string, inc: mixed, msg?: string): void;
     static include<T>(exp: Array<T>, inc: T, msg?: string): void;

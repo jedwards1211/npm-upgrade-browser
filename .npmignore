@@ -5,11 +5,10 @@
 !yarn.lock
 /lib
 /src
-/stories
+/scripts
 /test
 /coverage
 /flow-typed
-/assets
 __tests__
 /.*
 !/.flowconfig

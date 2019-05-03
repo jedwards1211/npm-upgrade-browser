@@ -37,12 +37,15 @@ const serverSideRender = async (req: $Request, res: $Response) => {
       cache: new InMemoryCache({ dataIdFromObject }),
     })
 
+    const routerContext = {}
+
     const app = (
       <Html
         title="what-broke-ui"
         assets={assets}
         apolloClient={apolloClient}
         location={req.url}
+        routerContext={routerContext}
         disableStylesGeneration
       />
     )

@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react'
-// $FlowFixMe wtf isn't this working??
 import type { QueryRenderProps } from 'react-apollo'
 import LoadingPanel from './LoadingPanel'
 import ErrorPanel from './ErrorPanel'
@@ -10,11 +9,43 @@ import LoadingAlert from './LoadingAlert'
 
 import ErrorAlert from './ErrorAlert'
 
-export type DefinedRenderProps<TData, TVariables = any> = $Diff<
-  QueryRenderProps<TData, TVariables>,
-  { data: any }
-> & {
+import {
+  ApolloClient,
+  type ApolloQueryResult,
+  type FetchMoreOptions,
+  type FetchMoreQueryOptions,
+  type NetworkStatus,
+  type SubscribeToMoreOptions,
+  ApolloError,
+  type QueryRenderPropFunction,
+} from 'react-apollo'
+import { type DocumentNode } from 'graphql'
+
+export type DefinedRenderProps<TData = any, TVariables = any> = {
   data: TData,
+  loading: boolean,
+  error?: ApolloError,
+  variables: TVariables,
+  networkStatus: NetworkStatus,
+  refetch: (variables?: TVariables) => Promise<ApolloQueryResult<TData>>,
+  fetchMore: ((
+    options: FetchMoreOptions<TData, TVariables> &
+      FetchMoreQueryOptions<TVariables>
+  ) => Promise<ApolloQueryResult<TData>>) &
+    (<TData2, TVariables2>(
+      options: { query: DocumentNode } & FetchMoreQueryOptions<TVariables2> &
+        FetchMoreOptions<TData2, TVariables2>
+    ) => Promise<ApolloQueryResult<TData2>>),
+  load: () => void,
+  startPolling: (interval: number) => void,
+  stopPolling: () => void,
+  subscribeToMore: (
+    options: SubscribeToMoreOptions<TData, any, any>
+  ) => () => void,
+  updateQuery: (
+    mapFn: (previousResult: TData, options: { variables: TVariables }) => TData
+  ) => mixed,
+  client: ApolloClient<any>,
 }
 
 type Options = {
@@ -27,7 +58,7 @@ type Options = {
 const queryBoilerplate = <TData, TVariables>(
   render: (result: DefinedRenderProps<TData, TVariables>) => React.Node,
   { loadingMessage, errorMessage, what, variant }: Options = {}
-) => ({
+): QueryRenderPropFunction<TData, TVariables> => ({
   loading,
   error,
   data,

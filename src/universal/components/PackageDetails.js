@@ -9,10 +9,11 @@ import { Query } from 'react-apollo'
 import queryBoilerplate, { type DefinedRenderProps } from './queryBoilerplate'
 import Markdown from 'react-markdown'
 import Typography from '@material-ui/core/Typography'
-
 import createStyled from 'material-ui-render-props-styles'
 import type { Classes } from 'material-ui-render-props-styles'
 import type { Theme } from '../theme'
+import ErrorAlert from './ErrorAlert'
+import SuccessAlert from './SuccessAlert'
 
 // @graphql-to-flow extract-types: Release
 const query = gql`
@@ -20,7 +21,10 @@ const query = gql`
     changelog(package: $package) {
       id
       version
+      header
+      date
       body
+      error
     }
   }
 `
@@ -35,7 +39,10 @@ type QueryVariables = { package: string }
 type Release = {
   id: string,
   version: string,
-  body: string,
+  header: string,
+  date: any,
+  body: ?string,
+  error: ?string,
 }
 
 export type Props = {
@@ -56,6 +63,7 @@ const PackageDetails = ({ pkg }: Props): React.Node => (
   <PackageDetailsStyles>
     {({ classes }: { classes: Classes<typeof packageDetailsStyles> }) => (
       <Query
+        fetchPolicy="cache-first"
         query={query}
         variables={
           ({
@@ -72,12 +80,18 @@ const PackageDetails = ({ pkg }: Props): React.Node => (
               <Typography variant="h2" className={classes.packageName}>
                 {pkg}
               </Typography>
-              {changelog.map(({ id, version, body }: Release) => (
-                <div key={id}>
-                  <Typography variant="h4">{version}</Typography>
-                  {body && <Markdown source={body} />}
-                </div>
-              ))}
+              {changelog &&
+                changelog.map(
+                  ({ id, version, header, body, error }: Release) => (
+                    <div key={id}>
+                      <Markdown source={`${header}\n\n${body || ''}`} />
+                      {error && <ErrorAlert>{error}</ErrorAlert>}
+                    </div>
+                  )
+                )}
+              {changelog && !changelog.length && (
+                <SuccessAlert>Up to date!</SuccessAlert>
+              )}
             </React.Fragment>
           ),
           { what: 'package details' }

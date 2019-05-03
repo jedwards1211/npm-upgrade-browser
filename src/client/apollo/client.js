@@ -17,6 +17,7 @@ const httpLink = new HttpLink({
 const cacheOptions = { dataIdFromObject }
 const cache = new InMemoryCache(cacheOptions).restore(window.__APOLLO_STATE__)
 
+// $FlowFixMe
 export default new ApolloClient({
   link: httpLink,
   cache,

@@ -8,7 +8,7 @@ const PORT = requireEnv('PORT')
 
 require('smart-restart')({
   main: path.resolve(__dirname, '..', 'src/server/index.babel.js'),
-  commandOptions: process.argv.slice(2),
+  args: process.argv.slice(2),
   deleteRequireCache: [
     require.resolve('../src/server/ssr/serverSideRender.js'),
   ],

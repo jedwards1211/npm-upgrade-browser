@@ -1,10 +1,9 @@
-/* @flow */
 import warning from 'warning'
-import type { StyleSheet, Rule, generateClassName } from 'jss'
 
 const maxRules = 1e10
 
 const env = process.env.NODE_ENV
+const isProd = env !== 'development'
 
 /**
  * Fork of jss/src/utils/createGenerateClassName that excludes the moduleId
@@ -13,11 +12,11 @@ const env = process.env.NODE_ENV
  * - server-side hot reloading requires forcing the moduleId and jss id to work,
  *   which is kind of a hack
  */
-export default (): generateClassName => {
+export default () => {
   let ruleCounter = 0
-  const defaultPrefix = env === 'production' ? 'c' : ''
+  const defaultPrefix = isProd ? 'c' : ''
 
-  return (rule: Rule, sheet?: StyleSheet): string => {
+  return (rule, sheet): string => {
     ruleCounter += 1
 
     if (ruleCounter > maxRules) {
@@ -29,15 +28,8 @@ export default (): generateClassName => {
     }
 
     let prefix = defaultPrefix
-
-    if (sheet) {
-      prefix = sheet.options.classNamePrefix || defaultPrefix
-    }
-
-    if (env === 'production') {
-      return `${prefix}${ruleCounter}`
-    }
-
+    if (sheet) prefix = sheet.options.classNamePrefix || defaultPrefix
+    if (isProd) return `${prefix}${ruleCounter}`
     return `${prefix + rule.key}-${ruleCounter}`
   }
 }

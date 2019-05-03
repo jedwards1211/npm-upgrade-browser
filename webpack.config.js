@@ -2,18 +2,20 @@
 
 /* eslint-env node */
 
-const requireEnv = require('@jcoreio/require-env')
 const webpack = require('webpack')
 const path = require('path')
 const ProgressPlugin = require('webpack/lib/ProgressPlugin')
 const env = process.env.NODE_ENV
 const isProd = env === 'production'
+const AssetsPlugin = require('assets-webpack-plugin')
+
+const assets = path.join(__dirname, 'assets')
 
 module.exports = {
   mode: isProd ? 'production' : 'development',
   devtool: isProd ? undefined : 'eval',
   output: {
-    path: path.join(__dirname, 'assets'),
+    path: assets,
     filename: 'app.js',
     publicPath: '/assets/',
   },
@@ -25,6 +27,7 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(env),
     }),
     new ProgressPlugin({ profile: false }),
+    new AssetsPlugin({ path: assets, filename: 'assets.json' }),
   ],
   module: {
     rules: [
@@ -50,8 +53,8 @@ module.exports = {
     ],
   },
   devServer: {
-    port: requireEnv('WEBPACK_PORT'),
-    contentBase: `http://localhost:${requireEnv('PORT')}`,
+    port: parseInt(process.env.WEBPACK_PORT),
+    contentBase: `http://localhost:${parseInt(process.env.PORT)}`,
     publicPath: '/assets/',
   },
 }

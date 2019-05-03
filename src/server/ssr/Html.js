@@ -26,6 +26,7 @@ type Props = {
   apolloClient: ApolloClient<any>,
   extractApolloState?: boolean,
   location: string,
+  routerContext: Object,
   disableStylesGeneration?: ?boolean,
 }
 
@@ -38,6 +39,7 @@ body {
 
 const Html = ({
   location,
+  routerContext,
   title,
   assets,
   apolloClient,
@@ -54,7 +56,7 @@ const Html = ({
         disableStylesGeneration={disableStylesGeneration}
       >
         <ApolloProvider client={apolloClient}>
-          <StaticRouter location={location}>
+          <StaticRouter context={routerContext} location={location}>
             <App />
           </StaticRouter>
         </ApolloProvider>

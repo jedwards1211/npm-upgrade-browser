@@ -65,6 +65,7 @@ export type Theme = {
     primary: Palette,
     secondary: Palette,
     error: Palette,
+    success: Palette,
   },
   shadows: Array<string>,
   spacing: {
@@ -112,6 +113,13 @@ export type Theme = {
   },
 }
 
-const theme: Theme = createMuiTheme()
+const theme: Theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+})
 theme.palette.error = red
+theme.palette.success = {
+  main: '#5dba54',
+}
 export default theme

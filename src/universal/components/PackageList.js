@@ -70,7 +70,10 @@ const changelogQuery = gql`
     changelog(package: $package) {
       id
       version
+      header
+      date
       body
+      error
     }
   }
 `
@@ -79,7 +82,10 @@ const changelogQuery = gql`
 type Release = {
   id: string,
   version: string,
-  body: string,
+  header: string,
+  date: any,
+  body: ?string,
+  error: ?string,
 }
 
 // @graphql-to-flow auto-generated

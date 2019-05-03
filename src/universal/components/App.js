@@ -59,9 +59,10 @@ const App = (props: Props): React.Node => (
               path="/package/*"
               render={({
                 match: {
+                  // $FlowFixMe
                   params: { [0]: pkg },
                 },
-              }) => <PackageDetails pkg={pkg} />}
+              }) => (pkg ? <PackageDetails pkg={pkg} /> : <React.Fragment />)}
             />
           </Switch>
         </div>

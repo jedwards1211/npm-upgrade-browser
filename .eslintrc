@@ -19,5 +19,8 @@
       "version": "detect",
       "flowVersion": "detect"
     }
+  },
+  "globals": {
+    "process": false
   }
 }
