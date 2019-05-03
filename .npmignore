@@ -1,8 +1,7 @@
 **
-!**/*.js
-!**/*.js.flow
 !/*.md
 !yarn.lock
+!/assets
 /lib
 /src
 /scripts

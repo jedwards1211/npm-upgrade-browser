@@ -6,28 +6,24 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![npm version](https://badge.fury.io/js/what-broke-ui.svg)](https://badge.fury.io/js/what-broke-ui)
 
-This is my personal skeleton for creating a React library npm package. You are welcome to use it.
+(Work in progress; not published yet)
 
-## Quick start
+This is an awesome UI for browsing upgrades to packages installed in your
+project so you can decide what to upgrade. It uses `what-broke` to fetch
+changelogs of the packages.
 
-```sh
-npx 0-60 clone https://github.com/jedwards1211/what-broke-ui.git
+# Requirements
+
+The code is only built for Node 10+ and recent browsers, because I assume you
+(being a developer) use an up-to-date browser and version of node.
+
+# Usage
+
+```
+npm i -g what-broke-ui
+cd your-project
+what-broke-ui
 ```
 
-## Tools used
-
-- babel 7
-- mocha
-- chai
-- istanbul
-- nyc
-- eslint
-- flow
-- enzyme
-- jsdom
-- prettier
-- husky
-- semantic-release
-- renovate
-- Circle CI
-- Codecov.io
+`what-broke-ui` will start a server on an open port, and open the UI in your
+browser.
