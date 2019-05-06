@@ -12,6 +12,10 @@ This is an awesome UI for browsing upgrades to packages installed in your
 project so you can decide what to upgrade. It uses `what-broke` to fetch
 changelogs of the packages.
 
+![Package View Screenshot](/screenshots/package-view.png)
+
+![Apply Upgrades View screenshot](/screenshots/apply-upgrades-view.png)
+
 # Requirements
 
 The code is only built for Node 10+ and recent browsers, because I assume you
