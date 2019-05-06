@@ -10,8 +10,10 @@ import type { Classes } from 'material-ui-render-props-styles'
 import type { Theme } from '../theme'
 import Paper from '@material-ui/core/Paper'
 import { Switch, Route } from 'react-router-dom'
-
 import PackageDetails from './PackageDetails'
+import Navbar from './Navbar'
+
+import UpgradesView from './UpgradesView'
 
 export type Props = {}
 
@@ -27,10 +29,19 @@ const appStyles = (theme: Theme) => ({
   },
   sidebar: {
     borderRadius: 0,
-    flex: '0 0 256px',
-    overflowY: 'auto',
+    flex: '0 0 320px',
+    position: 'relative',
+    backgroundColor: theme.palette.grey[100],
+    zIndex: theme.zIndex.drawer,
   },
   content: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+  },
+  body: {
+    position: 'relative',
     padding: theme.spacing.unit * 3,
     flex: 1,
     overflowY: 'auto',
@@ -54,17 +65,27 @@ const App = (props: Props): React.Node => (
           <PackageList />
         </Paper>
         <div className={classes.content}>
-          <Switch>
-            <Route
-              path="/package/*"
-              render={({
-                match: {
-                  // $FlowFixMe
-                  params: { [0]: pkg },
-                },
-              }) => (pkg ? <PackageDetails pkg={pkg} /> : <React.Fragment />)}
-            />
-          </Switch>
+          <Navbar />
+          <div className={classes.body}>
+            <Switch>
+              <Route path="/upgrades" component={UpgradesView} />
+              <Route
+                path="/package/*"
+                render={({
+                  match: {
+                    // $FlowFixMe
+                    params: { [0]: pkg },
+                  },
+                }) =>
+                  pkg ? (
+                    <PackageDetails key={pkg} pkg={pkg} />
+                  ) : (
+                    <React.Fragment />
+                  )
+                }
+              />
+            </Switch>
+          </div>
         </div>
       </div>
     )}

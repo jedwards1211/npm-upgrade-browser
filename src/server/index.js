@@ -7,6 +7,9 @@ import apolloServer from './graphql/apolloServer'
 import portscanner from 'portscanner'
 import open from 'open'
 import { promisify } from 'util'
+import chokidar from 'chokidar'
+
+import projectDir from './projectDir'
 
 const app = express()
 
@@ -41,6 +44,14 @@ async function start(): Promise<void> {
   console.log(`what-broke-ui is running on port ${port}`) // eslint-disable-line no-console
 
   if (process.env.NODE_ENV !== 'development') open(`http://localhost:${port}`)
+
+  chokidar
+    .watch(['package.json', 'node_modules/**/package.json'], {
+      cwd: projectDir,
+    })
+    .on('all', (event: any, file: string) => {
+      delete require.cache[path.resolve(projectDir, file)]
+    })
 }
 
 start().catch((error: Error) => {

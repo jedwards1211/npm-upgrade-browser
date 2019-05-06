@@ -41,6 +41,7 @@ module.exports = {
             '@babel/plugin-proposal-class-properties',
             '@babel/plugin-proposal-object-rest-spread',
             '@babel/plugin-transform-runtime',
+            'babel-plugin-lodash',
           ],
           presets: [
             ['@babel/preset-env', { targets: { browsers: 'last 2 versions' } }],

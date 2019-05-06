@@ -5,15 +5,21 @@ import * as fs from 'fs-extra'
 import JSONType from 'graphql-type-json'
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date'
 import { whatBroke } from 'what-broke'
-
 import { type GraphQLContext } from '../GraphQLContext'
+import { spawn } from 'promisify-child-process'
+import chalk from 'chalk'
 
 export const typeDefs = `
   type Query {
     temp: Boolean
     packageJson: JSON!
+    installedPackage(package: String!): InstalledPackage!
     installedPackages: [InstalledPackage!]!
     changelog(package: String!): [Release!]!
+  }
+
+  type Mutation {
+    upgradePackages(packages: [PackageUpgrade!]!): [InstalledPackage!]!
   }
 
   scalar Date
@@ -44,6 +50,11 @@ export const typeDefs = `
     startCursor: String
     endCursor: String
   }
+
+  input PackageUpgrade {
+    name: String!
+    version: String!
+  }
 `
 
 type InstalledPackage = {
@@ -51,6 +62,11 @@ type InstalledPackage = {
   name: string,
   version: string,
   isDev: boolean,
+}
+
+type PackageUpgrade = {
+  name: string,
+  version: string,
 }
 
 type Release = {
@@ -63,7 +79,33 @@ type Release = {
 }
 
 const getPackageJson = (src: any, args: any, { projectDir }: GraphQLContext) =>
-  fs.readJson(path.resolve(projectDir, 'package.json'))
+  // $FlowFixMe
+  require(path.resolve(projectDir, 'package.json'))
+
+function installedPackage(
+  src: any,
+  args: { package: string },
+  context: GraphQLContext
+): InstalledPackage {
+  const { dependencies, devDependencies } = getPackageJson(src, args, context)
+  const { package: name } = args
+  const { projectDir } = context
+  let version
+  try {
+    // $FlowFixMe
+    version = require(require.resolve(`${name}/package.json`, {
+      paths: [projectDir],
+    })).version
+  } catch (error) {
+    throw new Error(`package not found: ${name}`)
+  }
+  return {
+    id: name,
+    name,
+    version,
+    isDev: Boolean(!dependencies[name] && devDependencies[name]),
+  }
+}
 
 export const resolvers = {
   JSON: JSONType,
@@ -74,36 +116,24 @@ export const resolvers = {
   Query: {
     temp: () => true,
     packageJson: getPackageJson,
+    installedPackage,
     async installedPackages(
       src: any,
       args: any,
       context: GraphQLContext
     ): Promise<Array<InstalledPackage>> {
-      const { dependencies, devDependencies } = await getPackageJson(
+      const { dependencies, devDependencies } = getPackageJson(
         src,
         args,
         context
       )
-      const { projectDir } = context
       return [
-        ...Object.keys(dependencies).map((name: string) => ({
-          id: name,
-          name,
-          // $FlowFixMe
-          version: require(require.resolve(`${name}/package.json`, {
-            paths: [projectDir],
-          })).version,
-          isDev: false,
-        })),
-        ...Object.keys(devDependencies).map((name: string) => ({
-          id: name,
-          name,
-          // $FlowFixMe
-          version: require(require.resolve(`${name}/package.json`, {
-            paths: [projectDir],
-          })).version,
-          isDev: true,
-        })),
+        ...Object.keys(dependencies).map((name: string) =>
+          installedPackage(src, { package: name }, context)
+        ),
+        ...Object.keys(devDependencies).map((name: string) =>
+          installedPackage(src, { package: name }, context)
+        ),
       ]
     },
     async changelog(
@@ -126,6 +156,34 @@ export const resolvers = {
         body,
         error: error ? error.message || String(error) : null,
       }))
+    },
+  },
+  Mutation: {
+    async upgradePackages(
+      src: any,
+      { packages }: { packages: Array<PackageUpgrade> },
+      context: GraphQLContext
+    ): Promise<Array<InstalledPackage>> {
+      const { projectDir } = context
+      const upgrades = packages.map(
+        ({ name, version }) => `${name}@^${version}`
+      )
+      if (await fs.exists(path.join(projectDir, 'yarn.lock'))) {
+        console.log(chalk.gray(`yarn upgrade ${upgrades.join(' ')}`)) // eslint-disable-line no-console
+        await spawn('yarn', ['upgrade', ...upgrades], {
+          stdio: 'inherit',
+          cwd: projectDir,
+        })
+      } else {
+        console.log(chalk.gray(`npm update --save ${upgrades.join(' ')}`)) // eslint-disable-line no-console
+        await spawn('npm', ['update', '--save', ...upgrades], {
+          stdio: 'inherit',
+          cwd: projectDir,
+        })
+      }
+      return packages.map(({ name }) =>
+        installedPackage(src, { package: name }, context)
+      )
     },
   },
 }

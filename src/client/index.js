@@ -5,6 +5,11 @@ import ReactDOM from 'react-dom'
 import Root from './Root'
 import client from './apollo/client'
 import makeStore from './redux/makeStore'
+import theme from '../universal/theme'
+
+if ('production' !== process.env.NODE_ENV) {
+  window.theme = theme
+}
 
 let reloads = 0
 const rootElement = document.getElementById('root')

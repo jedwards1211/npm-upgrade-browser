@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-
+const open = require('open')
 const path = require('path')
 const express = require('express')
 const requireEnv = require('@jcoreio/require-env')
@@ -40,3 +40,4 @@ server.on('upgrade', (req, socket, head) => {
 console.log(
   `Dev server is listening on http://0.0.0.0:${webpackConfig.devServer.port}`
 )
+open(`http://0.0.0.0:${webpackConfig.devServer.port}`)
