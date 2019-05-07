@@ -30,7 +30,9 @@ export type Props = {
   children?: React.Node,
 }
 
-const ViewPanelStyles = createStyled(styles, { name: 'ViewPanel' })
+const ViewPanelStyles = createStyled<Theme, typeof styles>(styles, {
+  name: 'ViewPanel',
+})
 
 const ViewPanel = ({ classes, className, ...props }: Props) => (
   <ViewPanelStyles classes={classes}>
@@ -63,9 +65,12 @@ export type ViewPanelBodyProps = {
   noVerticalPadding?: boolean,
 }
 
-const ViewPanelBodyStyles = createStyled(viewPanelBodyStyles, {
-  name: 'ViewPanelBody',
-})
+const ViewPanelBodyStyles = createStyled<Theme, typeof viewPanelBodyStyles>(
+  viewPanelBodyStyles,
+  {
+    name: 'ViewPanelBody',
+  }
+)
 
 export const ViewPanelBody = ({
   classes,

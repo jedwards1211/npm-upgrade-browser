@@ -28,7 +28,9 @@ const navbarStyles = (theme: Theme) => ({
   },
 })
 
-const NavbarStyles = createStyled(navbarStyles, { name: 'Navbar' })
+const NavbarStyles = createStyled<Theme, typeof navbarStyles>(navbarStyles, {
+  name: 'Navbar',
+})
 
 const Navbar = (props: Props): React.Node => {
   const numUpgrades = useSelector(selectNumUpgrades)

@@ -146,9 +146,12 @@ const upgradesViewStyles = (theme: Theme) => ({
   },
 })
 
-const UpgradesViewStyles = createStyled(upgradesViewStyles, {
-  name: 'UpgradesView',
-})
+const UpgradesViewStyles = createStyled<Theme, typeof upgradesViewStyles>(
+  upgradesViewStyles,
+  {
+    name: 'UpgradesView',
+  }
+)
 
 const UpgradesView = ({
   installedPackages,
@@ -252,9 +255,12 @@ const upgradeListStyles = (theme: Theme) => ({
   },
 })
 
-const UpgradeListStyles = createStyled(upgradeListStyles, {
-  name: 'UpgradeList',
-})
+const UpgradeListStyles = createStyled<Theme, typeof upgradeListStyles>(
+  upgradeListStyles,
+  {
+    name: 'UpgradeList',
+  }
+)
 
 const UpgradeList = ({ title, packages }: UpgradeListProps): React.Node => (
   <UpgradeListStyles>
@@ -300,9 +306,12 @@ const packageItemStyles = (theme: Theme) => ({
   },
 })
 
-const PackageItemStyles = createStyled(packageItemStyles, {
-  name: 'PackageItem',
-})
+const PackageItemStyles = createStyled<Theme, typeof packageItemStyles>(
+  packageItemStyles,
+  {
+    name: 'PackageItem',
+  }
+)
 
 const PackageItem = ({
   package: { name, version },

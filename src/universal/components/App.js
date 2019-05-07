@@ -48,7 +48,9 @@ const appStyles = (theme: Theme) => ({
   },
 })
 
-const AppStyles = createStyled(appStyles, { name: 'App' })
+const AppStyles = createStyled<Theme, typeof appStyles>(appStyles, {
+  name: 'App',
+})
 
 export function parseStringParam(raw: ?string, param: string): string {
   if (!raw || !raw.trim()) {

@@ -19,9 +19,12 @@ const upgradesTitleStyles = (theme: Theme) => ({
   },
 })
 
-const UpgradesTitleStyles = createStyled(upgradesTitleStyles, {
-  name: 'UpgradesTitle',
-})
+const UpgradesTitleStyles = createStyled<Theme, typeof upgradesTitleStyles>(
+  upgradesTitleStyles,
+  {
+    name: 'UpgradesTitle',
+  }
+)
 
 const UpgradesTitle = (props: Props): React.Node => (
   <UpgradesTitleStyles>

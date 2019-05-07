@@ -58,9 +58,12 @@ const packageTitleStyles = (theme: Theme) => ({
   },
 })
 
-const PackageTitleStyles = createStyled(packageTitleStyles, {
-  name: 'PackageTitle',
-})
+const PackageTitleStyles = createStyled<Theme, typeof packageTitleStyles>(
+  packageTitleStyles,
+  {
+    name: 'PackageTitle',
+  }
+)
 
 const PackageTitle = ({ package: pkg }: Props): React.Node => {
   const selectedVersion = useSelector(state => state.selectedUpgrades[pkg])

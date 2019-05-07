@@ -70,9 +70,12 @@ const packageDetailsStyles = (theme: Theme) => ({
   },
 })
 
-const PackageDetailsStyles = createStyled(packageDetailsStyles, {
-  name: 'PackageDetails',
-})
+const PackageDetailsStyles = createStyled<Theme, typeof packageDetailsStyles>(
+  packageDetailsStyles,
+  {
+    name: 'PackageDetails',
+  }
+)
 
 const PackageDetailsContainer = ({ pkg }: Props): React.Node => {
   const selectedVersion = useSelector(state => state.selectedUpgrades[pkg])

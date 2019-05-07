@@ -77,9 +77,12 @@ const packageListStyles = (theme: Theme) => ({
   },
 })
 
-const PackageListStyles = createStyled(packageListStyles, {
-  name: 'PackageList',
-})
+const PackageListStyles = createStyled<Theme, typeof packageListStyles>(
+  packageListStyles,
+  {
+    name: 'PackageList',
+  }
+)
 
 const PackageList = (props: Props): React.Node => (
   <PackageListStyles>
@@ -141,9 +144,12 @@ const packagePanelStyles = (theme: Theme) => ({
   },
 })
 
-const PackageListItemStyles = createStyled(packagePanelStyles, {
-  name: 'PackageListItem',
-})
+const PackageListItemStyles = createStyled<Theme, typeof packagePanelStyles>(
+  packagePanelStyles,
+  {
+    name: 'PackageListItem',
+  }
+)
 
 const PackageListItem = ({
   pkg: { name, version },
