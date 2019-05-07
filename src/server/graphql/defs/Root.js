@@ -4,10 +4,11 @@ import path from 'path'
 import * as fs from 'fs-extra'
 import JSONType from 'graphql-type-json'
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date'
-import { whatBroke } from 'what-broke'
+import { fetchChangelog } from 'npm-fetch-changelog'
 import { type GraphQLContext } from '../GraphQLContext'
 import { spawn } from 'promisify-child-process'
 import chalk from 'chalk'
+import { map } from 'lodash'
 
 export const typeDefs = `
   type Query {
@@ -141,14 +142,17 @@ export const resolvers = {
       { package: pkg }: { package: string },
       { projectDir }: GraphQLContext
     ): Promise<Array<Release>> {
-      const changelog = await whatBroke(pkg, {
-        full: true,
-        // $FlowFixMe
-        fromVersion: require(require.resolve(`${pkg}/package.json`, {
-          paths: [projectDir],
-        })).version,
+      // $FlowFixMe
+      const { version } = require(require.resolve(`${pkg}/package.json`, {
+        paths: [projectDir],
+      }))
+      const changelog = await fetchChangelog(pkg, {
+        include: {
+          range: `>${version}`,
+          prerelease: true,
+        },
       })
-      return changelog.map(({ version, header, date, body, error }) => ({
+      return map(changelog, ({ version, header, date, body, error }) => ({
         id: `${pkg}/${version}`,
         version,
         header,
