@@ -44,7 +44,7 @@ const serverSideRender = async (req: $Request, res: $Response) => {
 
     const app = (
       <Html
-        title="what-broke-ui"
+        title="npm-upgrade-browser"
         assets={assets}
         apolloClient={apolloClient}
         location={req.url}

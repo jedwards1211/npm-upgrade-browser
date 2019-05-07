@@ -1,9 +1,9 @@
 {
-  "name": "what-broke-ui",
+  "name": "npm-upgrade-browser",
   "version": "0.0.0-development",
-  "description": "browser UI for viewing breaking changes to packages in your project",
+  "description": "browser UI for viewing changelogs and upgrading packages installed in your project",
   "bin": {
-    "what-broke-ui": "./assets/server/index.js"
+    "npm-upgrade-browser": "./assets/server/index.js"
   },
   "engines": {
     "node": ">=10.0.0"
@@ -71,17 +71,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jedwards1211/what-broke-ui.git"
+    "url": "https://github.com/jedwards1211/npm-upgrade-browser.git"
   },
   "keywords": [
-    ""
+    "npm",
+    "update",
+    "outdated",
+    "dependencies",
+    "interactive",
+    "automatic",
+    "changelog",
+    "browser"
   ],
   "author": "Andy Edwards",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jedwards1211/what-broke-ui/issues"
+    "url": "https://github.com/jedwards1211/npm-upgrade-browser/issues"
   },
-  "homepage": "https://github.com/jedwards1211/what-broke-ui#readme",
+  "homepage": "https://github.com/jedwards1211/npm-upgrade-browser#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",

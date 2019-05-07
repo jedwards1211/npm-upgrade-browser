@@ -41,7 +41,7 @@ async function start(): Promise<void> {
       portscanner.findAPortNotInUse(3000, 4000, '127.0.0.1', cb)
     )())
   app.listen(port)
-  console.log(`what-broke-ui is running on port ${port}`) // eslint-disable-line no-console
+  console.log(`npm-upgrade-browser is running on port ${port}`) // eslint-disable-line no-console
 
   if (process.env.NODE_ENV !== 'development') open(`http://localhost:${port}`)
 
