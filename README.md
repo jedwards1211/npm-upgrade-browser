@@ -20,11 +20,8 @@ The code is only built for Node 10+ and recent browsers, because I assume you
 # Usage
 
 ```
-npm i -g npm-upgrade-browser
 cd ~/your-project
-npm-upgrade-browser
-# or
-npm-upgrade-browser ~/your-project
+npx npm-upgrade-browser
 ```
 
 `npm-upgrade-browser` will start a server on an open port, and open the UI in your
