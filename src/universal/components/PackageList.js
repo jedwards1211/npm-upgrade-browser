@@ -34,6 +34,7 @@ const query = gql`
       name
       version
       isDev
+      homepage
     }
   }
 `
@@ -44,6 +45,7 @@ type InstalledPackage = {
   name: string,
   version: string,
   isDev: boolean,
+  homepage: ?string,
 }
 
 // @graphql-to-flow auto-generated

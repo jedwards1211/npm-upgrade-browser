@@ -34,6 +34,7 @@ export const typeDefs = `
     name: String!
     version: String!
     isDev: Boolean!
+    homepage: String
   }
 
   type Release {
@@ -63,6 +64,7 @@ type InstalledPackage = {
   name: string,
   version: string,
   isDev: boolean,
+  homepage: ?string,
 }
 
 type PackageUpgrade = {
@@ -92,11 +94,12 @@ function installedPackage(
   const { package: name } = args
   const { projectDir } = context
   let version
+  let homepage
   try {
     // $FlowFixMe
-    version = require(require.resolve(`${name}/package.json`, {
+    ;({ version, homepage } = require(require.resolve(`${name}/package.json`, {
       paths: [projectDir],
-    })).version
+    })))
   } catch (error) {
     throw new Error(`package not found: ${name}`)
   }
@@ -105,6 +108,7 @@ function installedPackage(
     name,
     version,
     isDev: Boolean(!dependencies[name] && devDependencies[name]),
+    homepage,
   }
 }
 
