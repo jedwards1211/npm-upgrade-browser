@@ -35,6 +35,8 @@ import Button from '@material-ui/core/Button'
 
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt'
 
+import { Link } from 'react-router-dom'
+
 // @graphql-to-flow extract-types: InstalledPackage
 const query = gql`
   query UpgradesView {
@@ -298,7 +300,7 @@ const packageItemStyles = (theme: Theme) => ({
   },
   iconButton: {
     margin: -12,
-    marginLeft: 8,
+    marginLeft: 0,
   },
 })
 
@@ -316,7 +318,7 @@ const PackageItem = ({
   return (
     <PackageItemStyles>
       {({ classes }: { classes: Classes<typeof packageItemStyles> }) => (
-        <ListItem button>
+        <ListItem button component={Link} to={`/package/${name}`}>
           <ListItemText className={classes.packageName}>{name}</ListItemText>
           <div className={classes.versions}>
             <Typography variant="body1" className={classes.version}>
@@ -325,7 +327,11 @@ const PackageItem = ({
             </Typography>
           </div>
           <IconButton
-            onClick={() => dispatch(selectUpgrade(name, null))}
+            onClick={(e: SyntheticMouseEvent<any>) => {
+              e.preventDefault()
+              e.stopPropagation()
+              dispatch(selectUpgrade(name, null))
+            }}
             className={classes.iconButton}
           >
             <CloseIcon />
