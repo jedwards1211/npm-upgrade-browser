@@ -6,8 +6,6 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![npm version](https://badge.fury.io/js/npm-upgrade-browser.svg)](https://badge.fury.io/js/npm-upgrade-browser)
 
-(Work in progress; not published yet)
-
 This is an awesome UI for upgrading packages in your project. It shows you changelogs for newer versions of each package, lets you select versions, and install the selected versions, all from your browser.
 
 ![Package View Screenshot](/screenshots/package-view.png)
