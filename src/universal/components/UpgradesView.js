@@ -19,7 +19,6 @@ import createStyled from 'material-ui-render-props-styles'
 import type { Classes } from 'material-ui-render-props-styles'
 import type { Theme } from '../theme'
 import Typography from '@material-ui/core/Typography'
-import UpdateIcon from '@material-ui/icons/Update'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {
@@ -30,11 +29,8 @@ import {
 import type { MutationFunction } from 'react-apollo'
 import ErrorAlert from './ErrorAlert'
 import LoadingAlert from './LoadingAlert'
-
 import Button from '@material-ui/core/Button'
-
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt'
-
 import { Link } from 'react-router-dom'
 
 // @graphql-to-flow extract-types: InstalledPackage
