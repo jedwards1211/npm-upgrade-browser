@@ -5,11 +5,13 @@ import semver from 'semver'
 export type Filters = {
   prerelease: boolean,
   minor: boolean,
+  all: boolean,
 }
 
 export const initFilters = {
   prerelease: false,
   minor: true,
+  all: false,
 }
 
 export const SET_FILTERS = 'SET_FILTERS'

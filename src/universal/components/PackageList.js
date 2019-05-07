@@ -24,6 +24,8 @@ import { setFilters } from '../redux/filters'
 import ChangelogQuery, { type ChangelogChildrenData } from './ChangelogQuery'
 import UpdateIcon from '@material-ui/icons/Update'
 
+import { type State } from '../redux/types'
+
 // @graphql-to-flow extract-types: InstalledPackage
 const query = gql`
   query PackageList {
@@ -144,7 +146,10 @@ const PackageListItemStyles = createStyled(packagePanelStyles, {
 const PackageListItem = ({
   pkg: { name, version },
 }: PackageListItemProps): React.Node => {
-  const selectedVersion = useSelector(state => state.selectedUpgrades[name])
+  const selectedVersion = useSelector(
+    (state: State) => state.selectedUpgrades[name]
+  )
+  const showAll = useSelector((state: State) => state.filters.all)
   return (
     <PackageListItemStyles>
       {({ classes }: { classes: Classes<typeof packagePanelStyles> }) => (
@@ -153,43 +158,58 @@ const PackageListItem = ({
             loading,
             error,
             changelog,
-          }: ChangelogChildrenData): React.Node => (
-            <ListItem
-              button
-              component={NavLink}
-              to={`/package/${name}`}
-              activeClassName={classes.active}
-            >
-              <ListItemText className={classes.packageName}>
-                {name}
-              </ListItemText>
-              {loading && <Spinner />}
-              {error && <ErrorIcon />}
-              <div className={classes.versions}>
-                <Typography variant="body1" className={classes.version}>
-                  {version}
-                </Typography>
-                <Typography variant="body1" className={classes.latestVersion}>
-                  {(selectedVersion || (changelog && changelog.length > 0)) && (
-                    <React.Fragment>
-                      {selectedVersion && (
-                        <UpdateIcon className={classes.updateIcon} />
-                      )}
-                      {changelog ? (
-                        <Badge color="primary" badgeContent={changelog.length}>
-                          {selectedVersion
-                            ? `^${selectedVersion}`
-                            : changelog[changelog.length - 1].version}
-                        </Badge>
-                      ) : (
-                        `^${selectedVersion}`
-                      )}
-                    </React.Fragment>
-                  )}
-                </Typography>
-              </div>
-            </ListItem>
-          )}
+          }: ChangelogChildrenData): React.Node => {
+            if (
+              !loading &&
+              !error &&
+              changelog &&
+              !changelog.length &&
+              !showAll
+            ) {
+              return <React.Fragment />
+            }
+            return (
+              <ListItem
+                button
+                component={NavLink}
+                to={`/package/${name}`}
+                activeClassName={classes.active}
+              >
+                <ListItemText className={classes.packageName}>
+                  {name}
+                </ListItemText>
+                {loading && <Spinner />}
+                {error && <ErrorIcon />}
+                <div className={classes.versions}>
+                  <Typography variant="body1" className={classes.version}>
+                    {version}
+                  </Typography>
+                  <Typography variant="body1" className={classes.latestVersion}>
+                    {(selectedVersion ||
+                      (changelog && changelog.length > 0)) && (
+                      <React.Fragment>
+                        {selectedVersion && (
+                          <UpdateIcon className={classes.updateIcon} />
+                        )}
+                        {changelog ? (
+                          <Badge
+                            color="primary"
+                            badgeContent={changelog.length}
+                          >
+                            {selectedVersion
+                              ? selectedVersion
+                              : changelog[changelog.length - 1].version}
+                          </Badge>
+                        ) : (
+                          selectedVersion
+                        )}
+                      </React.Fragment>
+                    )}
+                  </Typography>
+                </div>
+              </ListItem>
+            )
+          }}
         </ChangelogQuery>
       )}
     </PackageListItemStyles>

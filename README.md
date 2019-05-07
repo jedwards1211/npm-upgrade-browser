@@ -8,9 +8,7 @@
 
 (Work in progress; not published yet)
 
-This is an awesome UI for browsing upgrades to packages installed in your
-project so you can decide what to upgrade. It uses `what-broke` to fetch
-changelogs of the packages.
+This is an awesome UI for upgrading packages in your project. It shows you changelogs for newer versions of each package, lets you select versions, and install the selected versions, all from your browser.
 
 ![Package View Screenshot](/screenshots/package-view.png)
 
@@ -25,8 +23,10 @@ The code is only built for Node 10+ and recent browsers, because I assume you
 
 ```
 npm i -g what-broke-ui
-cd your-project
+cd ~/your-project
 what-broke-ui
+# or
+what-broke-ui ~/your-project
 ```
 
 `what-broke-ui` will start a server on an open port, and open the UI in your

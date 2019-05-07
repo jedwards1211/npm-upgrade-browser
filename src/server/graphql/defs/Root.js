@@ -165,18 +165,18 @@ export const resolvers = {
       context: GraphQLContext
     ): Promise<Array<InstalledPackage>> {
       const { projectDir } = context
-      const upgrades = packages.map(
-        ({ name, version }) => `${name}@^${version}`
-      )
+      const upgrades = packages.map(({ name, version }) => `${name}@${version}`)
       if (await fs.exists(path.join(projectDir, 'yarn.lock'))) {
-        console.log(chalk.gray(`yarn upgrade ${upgrades.join(' ')}`)) // eslint-disable-line no-console
+        process.stderr.write(chalk.gray(`yarn upgrade ${upgrades.join(' ')}\n`))
         await spawn('yarn', ['upgrade', ...upgrades], {
           stdio: 'inherit',
           cwd: projectDir,
         })
       } else {
-        console.log(chalk.gray(`npm update --save ${upgrades.join(' ')}`)) // eslint-disable-line no-console
-        await spawn('npm', ['update', '--save', ...upgrades], {
+        process.stderr.write(
+          chalk.gray(`npm update --save --exact ${upgrades.join(' ')}\n`)
+        )
+        await spawn('npm', ['update', '--save', '--exact', ...upgrades], {
           stdio: 'inherit',
           cwd: projectDir,
         })

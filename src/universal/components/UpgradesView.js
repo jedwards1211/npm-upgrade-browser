@@ -33,6 +33,8 @@ import LoadingAlert from './LoadingAlert'
 
 import Button from '@material-ui/core/Button'
 
+import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt'
+
 // @graphql-to-flow extract-types: InstalledPackage
 const query = gql`
   query UpgradesView {
@@ -170,7 +172,10 @@ const UpgradesView = ({
           (
             pkg: InstalledPackage
           ): 'prerelease' | 'major' | 'minor' | 'ignore' => {
-            const selectedVersion = state.selectedUpgrades[pkg.name]
+            let selectedVersion = state.selectedUpgrades[pkg.name]
+            if (selectedVersion && selectedVersion.startsWith('^')) {
+              selectedVersion = selectedVersion.substring(1)
+            }
             if (!selectedVersion) return 'ignore'
             if (semver.prerelease(selectedVersion)) return 'prerelease'
             if (!semver.satisfies(selectedVersion, `^${pkg.version}`))
@@ -194,9 +199,9 @@ const UpgradesView = ({
         <div className={classes.root}>
           <div className={classes.status}>
             {!upgradeResult.loading && !upgradeResult.error && (
-              <Typography variant="body1" className={classes.statusText}>
+              <Typography variant="h6" className={classes.statusText}>
                 {hasAnyUpgrades
-                  ? 'You have selected the following upgrades.'
+                  ? 'You have selected the following upgrades:'
                   : 'No upgrades selected.'}
               </Typography>
             )}
@@ -213,7 +218,8 @@ const UpgradesView = ({
             )}
             {hasAnyUpgrades && (
               <Button
-                variant="text"
+                variant="contained"
+                color="primary"
                 onClick={() =>
                   upgrade({
                     variables: ({ packages }: UpgradeMutationVariables),
@@ -283,9 +289,16 @@ const packageItemStyles = (theme: Theme) => ({
     textAlign: 'right',
   },
   version: {},
+  arrow: {
+    verticalAlign: 'middle',
+  },
   latestVersion: {},
   updateIcon: {
     verticalAlign: 'middle',
+  },
+  iconButton: {
+    margin: -12,
+    marginLeft: 8,
   },
 })
 
@@ -307,14 +320,14 @@ const PackageItem = ({
           <ListItemText className={classes.packageName}>{name}</ListItemText>
           <div className={classes.versions}>
             <Typography variant="body1" className={classes.version}>
-              {version}
-            </Typography>
-            <Typography variant="body1" className={classes.latestVersion}>
-              <UpdateIcon className={classes.updateIcon} /> {'^'}
+              {version} <ArrowRightAltIcon className={classes.arrow} />{' '}
               {selectedVersion}
             </Typography>
           </div>
-          <IconButton onClick={() => dispatch(selectUpgrade(name, null))}>
+          <IconButton
+            onClick={() => dispatch(selectUpgrade(name, null))}
+            className={classes.iconButton}
+          >
             <CloseIcon />
           </IconButton>
         </ListItem>

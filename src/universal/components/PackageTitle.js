@@ -24,6 +24,11 @@ export type Props = {
 }
 
 const packageTitleStyles = (theme: Theme) => ({
+  root: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'baseline',
+  },
   selectedVersion: {
     marginLeft: theme.spacing.unit * 3,
   },
@@ -42,8 +47,10 @@ const PackageTitle = ({ package: pkg }: Props): React.Node => {
   return (
     <PackageTitleStyles>
       {({ classes }: { classes: Classes<typeof packageTitleStyles> }) => (
-        <React.Fragment>
-          <Typography variant="h3">{pkg}</Typography>
+        <div className={classes.root}>
+          <Typography component="h1" variant="h4">
+            {pkg}
+          </Typography>
           {selectedVersion && (
             <Typography
               variant="h5"
@@ -57,7 +64,7 @@ const PackageTitle = ({ package: pkg }: Props): React.Node => {
               </IconButton>
             </Typography>
           )}
-        </React.Fragment>
+        </div>
       )}
     </PackageTitleStyles>
   )
