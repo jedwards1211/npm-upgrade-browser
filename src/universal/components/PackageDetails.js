@@ -108,17 +108,20 @@ const PackageDetails = ({
   package: pkg,
   loading,
   error,
-  changelog,
+  changelog: _changelog,
   selectedVersion,
   dispatch,
 }: PackageDetailsProps): React.Node => {
+  const changelog = React.useMemo(
+    () => _changelog && [..._changelog].reverse(),
+    [_changelog]
+  )
   const bestVersions: { [string]: string } = React.useMemo(
     () => {
       const result = {}
       if (!changelog) return result
       let currentBest
-      for (let i = changelog.length - 1; i >= 0; i--) {
-        const { version } = changelog[i]
+      for (const { version } of changelog) {
         if (!currentBest || !semver.satisfies(currentBest, `^${version}`)) {
           currentBest = version
         }
