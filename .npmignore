@@ -1,7 +1,7 @@
 **
 !/*.md
 !yarn.lock
-!/assets
+!/assets/**
 /lib
 /src
 /scripts
