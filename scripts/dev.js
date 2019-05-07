@@ -2,9 +2,13 @@
 const open = require('open')
 const path = require('path')
 const express = require('express')
+const morgan = require('morgan')
 const requireEnv = require('@jcoreio/require-env')
 const webpackConfig = require('../webpack.config')
 const PORT = requireEnv('PORT')
+
+let readyPromise = Promise.reject(new Error('server not started yet'))
+readyPromise.catch(() => {})
 
 require('smart-restart')({
   main: path.resolve(__dirname, '..', 'src/server/index.babel.js'),
@@ -12,9 +16,18 @@ require('smart-restart')({
   deleteRequireCache: [
     require.resolve('../src/server/ssr/serverSideRender.js'),
   ],
+  onChildSpawned: child => {
+    readyPromise = new Promise(resolve => {
+      child.on('message', msg => {
+        if (msg && msg.listening) resolve()
+      })
+    })
+  },
 })
 
 const app = express()
+
+app.use(morgan('tiny'))
 
 const compiler = require('webpack')(webpackConfig)
 app.use(
@@ -28,12 +41,16 @@ proxy.on('error', err => console.error(err.stack))
 
 const target = `http://localhost:${PORT}`
 
-app.all('*', (req, res) => proxy.web(req, res, { target }))
+app.all('*', async (req, res) => {
+  await readyPromise
+  proxy.web(req, res, { target })
+})
 
 const server = app.listen(webpackConfig.devServer.port)
 if (!server) throw new Error('expected server to be defined')
 
-server.on('upgrade', (req, socket, head) => {
+server.on('upgrade', async (req, socket, head) => {
+  await readyPromise
   proxy.ws(req, socket, head, { target })
 })
 

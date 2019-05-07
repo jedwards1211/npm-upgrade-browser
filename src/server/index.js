@@ -43,6 +43,8 @@ async function start(): Promise<void> {
   app.listen(port)
   console.log(`npm-upgrade-browser is running on port ${port}`) // eslint-disable-line no-console
 
+  if (process.send) process.send({ listening: true })
+
   if (process.env.NODE_ENV !== 'development') open(`http://localhost:${port}`)
 
   chokidar
